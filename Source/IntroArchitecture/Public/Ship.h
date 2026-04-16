@@ -25,8 +25,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
+	float ImpulseStrength = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
+	float TorqueStrength = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Graphics")
+	UStaticMeshComponent* ShipMesh;
 private:
 
-	float ImpulseStrength = 10.0f;
 
 };
