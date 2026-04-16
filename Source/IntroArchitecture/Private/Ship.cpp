@@ -11,6 +11,13 @@ AShip::AShip()
 
 	ShipMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
 	SetRootComponent(ShipMesh);
+	
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(ShipMesh);
+	CameraBoom->TargetArmLength = 1000.0f;
+
+	MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
+	MainCamera->SetupAttachment(CameraBoom);
 
 }
 
