@@ -6,8 +6,12 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "InputActionValue.h"
 
 #include "Ship.generated.h"
+
+class UInputMappingContext;
+class UInputAction;
 
 UCLASS()
 class INTROARCHITECTURE_API AShip : public APawn
@@ -38,6 +42,19 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Graphics")
 	UStaticMeshComponent* ShipMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Input")
+	UInputMappingContext* ShipMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Input")
+	UInputAction* PropelUpAction;
+
+	void PropelUp(const FInputActionValue& Value);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Input")
+	UInputAction* RotateAction;
+
+	void RotateShip(const FInputActionValue& Value);	
 
 private:
 

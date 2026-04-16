@@ -2,6 +2,8 @@
 
 
 #include "Ship.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 
 // Sets default values
 AShip::AShip()
@@ -19,6 +21,8 @@ AShip::AShip()
 	MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCamera->SetupAttachment(CameraBoom);
 
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
+
 }
 
 // Called when the game starts or when spawned
@@ -26,8 +30,13 @@ void AShip::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Impulse Strength: %f"), ImpulseStrength);
-	UE_LOG(LogTemp, Warning, TEXT("Torque Strength: %f"), TorqueStrength);
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(ShipMappingContext, 0);
+		}
+	}
 }
 
 // Called every frame
@@ -42,5 +51,27 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(PropelUpAction, ETriggerEvent::Triggered, this, &AShip::PropelUp);
+		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AShip::RotateShip);
+	}
+
+}
+
+void AShip::PropelUp(const FInputActionValue& Value)
+{
+	if (bool CurrentValue = Value.Get<bool>())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Propelling UP!"))
+	}
+}
+
+void AShip::RotateShip(const FInputActionValue& Value)
+{
+	if (float CurrentValue = Value.Get<float>())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Rotating ship! Value: %f"), CurrentValue)
+	}
 }
 
