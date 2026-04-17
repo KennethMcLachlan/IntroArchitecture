@@ -39,6 +39,8 @@ public:
 		const FHitResult& Hit) 
 		override;
 
+	void HandleGoalReached();	
+
 private:
 
 	bool bIsGoalReached = false;

@@ -53,6 +53,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
 	float TorqueStrength = 10.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
+	float MaxLandingVelocity = 1000.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Graphics")
 	UStaticMeshComponent* ShipMesh;
 
@@ -62,12 +65,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Input")
 	UInputAction* PropelUpAction;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Input")
 	UInputAction* RotateAction;
 
+
+
 	void PropelUp(const FInputActionValue& Value);
 	void RotateShip(const FInputActionValue& Value);	
+	void HandleShipLanding();
 
 private:
 
@@ -76,4 +81,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* MainCamera;
+
+	float CurrentVelocity = 0.0f;
 };

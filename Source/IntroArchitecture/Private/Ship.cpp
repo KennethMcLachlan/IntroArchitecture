@@ -46,6 +46,11 @@ void AShip::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (GEngine)
+	{
+		CurrentVelocity = GetVelocity().Length();
+		GEngine->AddOnScreenDebugMessage(1, INDEFINITELY_LOOPING_DURATION, FColor::Green, FString::Printf(TEXT("Current Velocity: %f"), CurrentVelocity));
+	}
 }
 
 // Called to bind functionality to input
@@ -79,6 +84,22 @@ void AShip::RotateShip(const FInputActionValue& Value)
 	}
 }
 
+void AShip::HandleShipLanding()
+{
+	
+	if (!IsLandedSafely() || CurrentVelocity > MaxLandingVelocity)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ship has crashed!"));
+
+		FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+		UGameplayStatics::OpenLevel(GetWorld(), CurrentLevelName, false);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Landed safely!"));
+	}
+}
+
 void AShip::NotifyHit(
 	UPrimitiveComponent* MyComp,
 	AActor* Other,
@@ -91,15 +112,7 @@ void AShip::NotifyHit(
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
-	if (!IsLandedSafely())
-	{
-		UGameplayStatics::OpenLevel(GetWorld(), "PrototypeLevel");
-		UE_LOG(LogTemp, Warning, TEXT("Ship has crashed!"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Landed safely!"));
-	}
+	HandleShipLanding();
 }
 
 bool AShip::IsLandedSafely()

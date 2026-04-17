@@ -4,6 +4,7 @@
 #include "Goal.h"
 
 #include "Ship.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AGoal::AGoal()
@@ -34,12 +35,21 @@ void AGoal::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComp
 	//Functionality of the hit event
 	if (Other && Other != this && Other->IsA(AShip::StaticClass()))
 	{
-		if (!bIsGoalReached)
-		{
-			bIsGoalReached = true;
-			UE_LOG(LogTemp, Warning, TEXT("Goal!!"));
-		}
+		HandleGoalReached();
+		
 	}
 
+}
+
+void AGoal::HandleGoalReached()
+{
+	if (!bIsGoalReached)
+		{
+			bIsGoalReached = true;
+			FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+			UGameplayStatics::OpenLevel(GetWorld(), CurrentLevelName, false);
+
+			UE_LOG(LogTemp, Warning, TEXT("Goal!!"));
+		}
 }
 
