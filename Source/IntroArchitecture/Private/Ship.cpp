@@ -5,6 +5,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Components/PrimitiveComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 AShip::AShip()
@@ -74,7 +76,38 @@ void AShip::RotateShip(const FInputActionValue& Value)
 	{
 		const FVector Torque = FVector(1, 0, 0) * (TorqueStrength * CurrentValue);
 		ShipMesh->AddTorqueInRadians(Torque, NAME_None, true);
-		UE_LOG(LogTemp, Warning, TEXT("Rotating ship with torque: %s"), *Torque.ToString());
 	}
+}
+
+void AShip::NotifyHit(
+	UPrimitiveComponent* MyComp,
+	AActor* Other,
+	UPrimitiveComponent* OtherComp,
+	bool bSelfMoved,
+	FVector HitLocation,
+	FVector HitNormal,
+	FVector NormalImpulse,
+	const FHitResult& Hit)
+{
+	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+
+	if (!IsLandedSafely())
+	{
+		UGameplayStatics::OpenLevel(GetWorld(), "PrototypeLevel");
+		UE_LOG(LogTemp, Warning, TEXT("Ship has crashed!"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Landed safely!"));
+	}
+}
+
+bool AShip::IsLandedSafely()
+{
+	FRotator CurrentRotation = GetActorRotation();
+	
+	float AcceptableRollRange = 80.0f;
+
+	return FMath::Abs(CurrentRotation.Roll) <= AcceptableRollRange;
 }
 

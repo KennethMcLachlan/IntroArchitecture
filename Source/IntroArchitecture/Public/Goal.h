@@ -39,4 +39,8 @@ public:
 		const FHitResult& Hit) 
 		override;
 
+private:
+
+	bool bIsGoalReached = false;
+
 };

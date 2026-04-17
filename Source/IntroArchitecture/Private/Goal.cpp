@@ -3,6 +3,8 @@
 
 #include "Goal.h"
 
+#include "Ship.h"
+
 // Sets default values
 AGoal::AGoal()
 {
@@ -30,7 +32,14 @@ void AGoal::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComp
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
 	//Functionality of the hit event
+	if (Other && Other != this && Other->IsA(AShip::StaticClass()))
+	{
+		if (!bIsGoalReached)
+		{
+			bIsGoalReached = true;
+			UE_LOG(LogTemp, Warning, TEXT("Goal!!"));
+		}
+	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Goal was hit!"));
 }
 

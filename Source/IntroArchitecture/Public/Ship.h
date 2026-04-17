@@ -28,6 +28,19 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void NotifyHit(
+		UPrimitiveComponent* MyComp,
+		AActor* Other,
+		UPrimitiveComponent* OtherComp,
+		bool bSelfMoved,
+		FVector HitLocation,
+		FVector HitNormal,
+		FVector NormalImpulse,
+		const FHitResult& Hit) 
+		override;
+
+	bool IsLandedSafely();
+
 
 
 protected:
