@@ -4,6 +4,7 @@
 #include "Ship.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/PrimitiveComponent.h"
 
 // Sets default values
 AShip::AShip()
@@ -63,7 +64,22 @@ void AShip::PropelUp(const FInputActionValue& Value)
 {
 	if (bool CurrentValue = Value.Get<bool>())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Propelling UP!"))
+		const FVector Impulse = FVector(0, 0, 1) * ImpulseStrength;
+		const FVector LocalVector = FVector(0, 0, -50);
+		//ShipMesh->AddImpulse(Impulse, NAME_None, true);
+		ShipMesh->AddForceAtLocationLocal(Impulse, LocalVector, NAME_None);
+
+		DrawDebugSphere(
+			GetWorld(),
+			ShipMesh->GetComponentTransform().TransformPositionNoScale(LocalVector),
+			10.0f,
+			16,
+			FColor::Red,
+			false,
+			-1.0f,
+			1,
+			0.5f
+		);
 	}
 }
 
@@ -71,7 +87,10 @@ void AShip::RotateShip(const FInputActionValue& Value)
 {
 	if (float CurrentValue = Value.Get<float>())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Rotating ship! Value: %f"), CurrentValue)
+		const FVector Torque = FVector(1, 0, 0) * (TorqueStrength * CurrentValue);
+		ShipMesh->AddTorqueInRadians(Torque, NAME_None, true);
+		UE_LOG(LogTemp, Warning, TEXT("Rotating ship with torque: %s"), *Torque.ToString());
 	}
+
 }
 
