@@ -23,7 +23,6 @@ AShip::AShip()
 	MainCamera->SetupAttachment(CameraBoom);
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
-
 }
 
 // Called when the game starts or when spawned
@@ -57,7 +56,6 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		EnhancedInputComponent->BindAction(PropelUpAction, ETriggerEvent::Triggered, this, &AShip::PropelUp);
 		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AShip::RotateShip);
 	}
-
 }
 
 void AShip::PropelUp(const FInputActionValue& Value)
@@ -78,6 +76,5 @@ void AShip::RotateShip(const FInputActionValue& Value)
 		ShipMesh->AddTorqueInRadians(Torque, NAME_None, true);
 		UE_LOG(LogTemp, Warning, TEXT("Rotating ship with torque: %s"), *Torque.ToString());
 	}
-
 }
 
