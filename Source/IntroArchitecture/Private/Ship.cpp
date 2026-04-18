@@ -53,7 +53,6 @@ void AShip::Tick(float DeltaTime)
 	}
 }
 
-// Called to bind functionality to input
 void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -89,14 +88,13 @@ void AShip::HandleShipLanding()
 	
 	if (!IsLandedSafely() || CurrentVelocity > MaxLandingVelocity)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Ship has crashed!"));
-
 		FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
 		UGameplayStatics::OpenLevel(GetWorld(), CurrentLevelName, false);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Landed safely!"));
+		//Create functionality for when landing is a success (Celebration??)
 	}
 }
 
@@ -118,7 +116,6 @@ void AShip::NotifyHit(
 bool AShip::IsLandedSafely()
 {
 	FRotator CurrentRotation = GetActorRotation();
-	
 	float AcceptableRollRange = 80.0f;
 
 	return FMath::Abs(CurrentRotation.Roll) <= AcceptableRollRange;

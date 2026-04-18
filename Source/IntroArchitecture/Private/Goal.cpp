@@ -38,18 +38,17 @@ void AGoal::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComp
 		HandleGoalReached();
 		
 	}
-
 }
 
 void AGoal::HandleGoalReached()
 {
 	if (!bIsGoalReached)
-		{
-			bIsGoalReached = true;
-			FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-			UGameplayStatics::OpenLevel(GetWorld(), CurrentLevelName, false);
+	{
+		bIsGoalReached = true;
+		FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+		UGameplayStatics::OpenLevel(GetWorld(), CurrentLevelName, false);
 
-			UE_LOG(LogTemp, Warning, TEXT("Goal!!"));
-		}
+		UE_LOG(LogTemp, Warning, TEXT("Goal!!"));
+	}
 }
 

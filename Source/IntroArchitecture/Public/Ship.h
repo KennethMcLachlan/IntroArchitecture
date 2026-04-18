@@ -19,13 +19,12 @@ class INTROARCHITECTURE_API AShip : public APawn
 	GENERATED_BODY()
 
 public:
+
 	// Sets default values for this pawn's properties
 	AShip();
 
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void NotifyHit(
@@ -41,10 +40,8 @@ public:
 
 	bool IsLandedSafely();
 
-
-
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Movement")
@@ -67,8 +64,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ship | Input")
 	UInputAction* RotateAction;
-
-
 
 	void PropelUp(const FInputActionValue& Value);
 	void RotateShip(const FInputActionValue& Value);	

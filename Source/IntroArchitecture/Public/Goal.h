@@ -2,9 +2,10 @@
 
 
 //TODO: Notify the goal that it has been hit (Physics Hit)
-// TODO: by the ship actor
+//TODO: by the ship actor
 //TODO: Stop Timer?? We need a timer object
 //TODO: Activate?? Celebration??
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -17,7 +18,6 @@ class INTROARCHITECTURE_API AGoal : public AActor
 	GENERATED_BODY()
 	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
@@ -25,7 +25,6 @@ public:
 	// Sets default values for this actor's properties
 	AGoal();
 
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void NotifyHit(
