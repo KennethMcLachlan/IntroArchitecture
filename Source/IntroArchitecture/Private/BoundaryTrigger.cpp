@@ -19,7 +19,15 @@ void UBoundaryTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	AActor* ParentActor = GetOwner();
+	if (ParentActor)
+	{
+		UBoxComponent* BoxComp = ParentActor->FindComponentByClass<UBoxComponent>();
+		if (BoxComp)
+		{
+			BoxComp->OnComponentBeginOverlap.AddDynamic(this, &UBoundaryTrigger::OnOverlapBegin);
+		}
+	}
 	
 }
 
@@ -30,5 +38,13 @@ void UBoundaryTrigger::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UBoundaryTrigger::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && OtherActor != GetOwner())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Out of bounds!"));
+	}
 }
 
