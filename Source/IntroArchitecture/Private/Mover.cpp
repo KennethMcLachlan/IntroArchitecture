@@ -10,7 +10,9 @@ UMover::UMover()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	
+	MovementSpeed = 100.0f;
+	bMovingToEnd = true;
+
 }
 
 
@@ -19,7 +21,15 @@ void UMover::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	AActor* Owner = GetOwner();
+	if (Owner)
+	{
+		USceneComponent* ActorRoot = Owner->GetRootComponent();
+		ActorRoot->SetMobility(EComponentMobility::Movable);
+
+		WorldStartPosition = Owner->GetTransform().TransformPosition(LocalStartPosition);
+		WorldEndPosition = Owner->GetTransform().TransformPosition(LocalEndPosition);
+	}
 	
 }
 
@@ -29,6 +39,28 @@ void UMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponent
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	
+	if (!GetOwner())
+	{
+		return;
+	}
+
+	FVector CurrentPosition = GetOwner()->GetActorLocation();
+	FVector TargetPosition = bMovingToEnd ? WorldEndPosition : WorldStartPosition;
+	FVector Direction = (TargetPosition - CurrentPosition).GetSafeNormal();
+	FVector NewPosition = CurrentPosition + MovementSpeed * DeltaTime * Direction;
+
+	if (FVector::Dist(NewPosition, TargetPosition) < FVector::Dist(CurrentPosition, TargetPosition))
+	{
+		GetOwner()->SetActorLocation(NewPosition);
+	}
+	else
+	{
+		GetOwner()->SetActorLocation(TargetPosition);
+		bMovingToEnd = !bMovingToEnd;
+	}
+
+
+
+
 }
 
