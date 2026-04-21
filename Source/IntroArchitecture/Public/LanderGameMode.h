@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Engine/DataTable.h"
+#include "UObject/ConstructorHelpers.h"
+
 #include "LanderGameMode.generated.h"
 
 /**
@@ -29,7 +32,8 @@ public:
 
 protected:
 
-
+	UPROPERTY()
+	UDataTable* LevelTimerDataTable;
 
 private:
 

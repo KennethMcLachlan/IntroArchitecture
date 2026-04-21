@@ -93,7 +93,7 @@ void AShip::HandleShipLanding()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Landed safely!"));
+		//UE_LOG(LogTemp, Warning, TEXT("Landed safely!"));
 		//Create functionality for when landing is a success (Celebration??)
 	}
 }
