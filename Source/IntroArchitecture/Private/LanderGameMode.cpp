@@ -31,13 +31,15 @@ void ALanderGameMode::BeginPlay()
 
 	if (LevelTimerDataTable != nullptr)
 	{
-		FName LevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-		static const FString ContextString(TEXT("PrototypeLevel"));
-		const FLevelTimerData* Row = LevelTimerDataTable->FindRow<FLevelTimerData>(LevelName, ContextString);
+		FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
 
-		if (Row != nullptr)
+		for (auto It : LevelTimerDataTable->GetRowMap())
 		{
-			CountdownTimer = Row->TimerValue;
+			const FLevelTimerData* Row = reinterpret_cast<const FLevelTimerData*>(It.Value);
+			if (Row && Row->LevelName == CurrentLevelName)
+			{
+				CountdownTimer = Row->TimerValue;
+			}
 		}
 	}
 
@@ -48,10 +50,9 @@ void ALanderGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (Timer > 0)
+	if (bIsTimerRunning)
 	{
 		Timer -= DeltaTime;
-		UE_LOG(LogTemp, Warning, TEXT("Timer: %f"), CountdownTimer);
 
 		if (Timer <= 0.0f)
 		{
@@ -64,5 +65,44 @@ void ALanderGameMode::Tick(float DeltaTime)
 	{
 		GEngine->AddOnScreenDebugMessage(2, INDEFINITELY_LOOPING_DURATION, FColor::Yellow, FString::Printf(TEXT("Timer: %f"), Timer));
 	}
-	
+}
+
+void ALanderGameMode::StopTimer()
+{
+	bIsTimerRunning = false;
+}
+
+void ALanderGameMode::LoadNextLevel()
+{
+	int32 CurrentLevelID = GetCurrentLevelID();
+	if (CurrentLevelID != -1)
+	{
+		int32 NextLevelID = CurrentLevelID + 1;
+
+		for (auto It : LevelTimerDataTable->GetRowMap())
+		{
+			const FLevelTimerData* Row = reinterpret_cast<const FLevelTimerData*>(It.Value);
+			if (Row && Row->LevelID == NextLevelID)
+			{
+				UGameplayStatics::OpenLevel(this, Row->LevelName);
+				return;
+			}
+		}
+	}
+}
+
+int32 ALanderGameMode::GetCurrentLevelID() const
+{
+	FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this);
+
+	for (auto It : LevelTimerDataTable->GetRowMap())
+	{
+		const FLevelTimerData* Row = reinterpret_cast<const FLevelTimerData*>(It.Value);
+		if (Row && Row->LevelName == CurrentLevelName)
+		{
+			return Row->LevelID;
+		}
+	}
+	return -1;
+
 }

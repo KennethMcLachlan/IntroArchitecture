@@ -5,6 +5,7 @@
 
 #include "Ship.h"
 #include "Kismet/GameplayStatics.h"
+#include "LanderGameMode.h"
 
 // Sets default values
 AGoal::AGoal()
@@ -45,10 +46,17 @@ void AGoal::HandleGoalReached()
 	if (!bIsGoalReached)
 	{
 		bIsGoalReached = true;
-		FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-		UGameplayStatics::OpenLevel(GetWorld(), CurrentLevelName, false);
+		//FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+		//UGameplayStatics::OpenLevel(GetWorld(), CurrentLevelName, false);
 
 		UE_LOG(LogTemp, Warning, TEXT("Goal!!"));
+
+		ALanderGameMode* LanderGameMode = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
+		if (LanderGameMode)
+		{
+			LanderGameMode->StopTimer();
+			LanderGameMode->LoadNextLevel();
+		}
 	}
 }
 

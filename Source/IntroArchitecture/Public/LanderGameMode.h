@@ -28,7 +28,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gameplay")
 	float CountdownTimer;
 
-	float Timer;
+	void StopTimer();
+	void LoadNextLevel();
 
 protected:
 
@@ -37,4 +38,7 @@ protected:
 
 private:
 
+	float Timer;
+	bool bIsTimerRunning = true;
+	int32 GetCurrentLevelID() const;
 };
