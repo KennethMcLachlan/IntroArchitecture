@@ -52,12 +52,15 @@ void ALanderGameMode::Tick(float DeltaTime)
 
 	if (bIsTimerRunning)
 	{
-		Timer -= DeltaTime;
-
-		if (Timer <= 0.0f)
+		if (Timer > 0)
 		{
-			FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-		    UGameplayStatics::OpenLevel(this, CurrentLevelName);
+			Timer -= DeltaTime;
+
+			if (Timer <= 0.0f)
+			{
+				FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
+				UGameplayStatics::OpenLevel(this, CurrentLevelName);
+			}
 		}
 	}
 
