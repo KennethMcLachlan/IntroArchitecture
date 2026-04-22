@@ -67,6 +67,14 @@ void ALanderGameMode::Tick(float DeltaTime)
 	}
 }
 
+void ALanderGameMode::AddToTimer(float Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Value Amount that is passed from the collectable: %f"), Value)
+	UE_LOG(LogTemp, Warning, TEXT("Timer Value Before Addition: %f"), Timer);
+	Timer = Timer + Value;
+	UE_LOG(LogTemp, Warning, TEXT("TimerValue AfterAddition: %f"), Timer);
+}
+
 void ALanderGameMode::StopTimer()
 {
 	bIsTimerRunning = false;
