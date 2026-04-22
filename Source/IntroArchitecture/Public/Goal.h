@@ -1,15 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-//TODO: Notify the goal that it has been hit (Physics Hit)
-//TODO: by the ship actor
-//TODO: Stop Timer?? We need a timer object
-//TODO: Activate?? Celebration??
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 #include "Goal.generated.h"
 
 UCLASS()
@@ -24,6 +20,9 @@ public:
 
 	// Sets default values for this actor's properties
 	AGoal();
+
+	UPROPERTY(EditAnywhere, Category = "FX")
+	UNiagaraSystem* CelebrationEffect;
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -43,5 +42,9 @@ public:
 private:
 
 	bool bIsGoalReached = false;
+	bool bWaitingForParticleFX = false;
+
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* CelebrationEffectComponent;
 
 };

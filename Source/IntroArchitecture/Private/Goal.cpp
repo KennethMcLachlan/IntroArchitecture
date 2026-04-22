@@ -22,10 +22,21 @@ void AGoal::BeginPlay()
 	
 }
 
-// Called every frame
 void AGoal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (bWaitingForParticleFX)
+	{
+		if (CelebrationEffectComponent && !CelebrationEffectComponent->IsActive())
+		{
+			ALanderGameMode* LanderGameMode = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
+			if (LanderGameMode)
+			{
+				LanderGameMode->LoadNextLevel();
+			}
+		}
+	}
 
 }
 
@@ -37,7 +48,6 @@ void AGoal::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComp
 	if (Other && Other != this && Other->IsA(AShip::StaticClass()))
 	{
 		HandleGoalReached();
-		
 	}
 }
 
@@ -46,17 +56,26 @@ void AGoal::HandleGoalReached()
 	if (!bIsGoalReached)
 	{
 		bIsGoalReached = true;
-		//FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(this, true);
-		//UGameplayStatics::OpenLevel(GetWorld(), CurrentLevelName, false);
+
+		if (CelebrationEffect)
+		{
+			FVector EffectLocation = GetActorLocation();
+			CelebrationEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), CelebrationEffect, EffectLocation, GetActorRotation());
+
+			if (CelebrationEffectComponent)
+			{
+				bWaitingForParticleFX = true;
+
+				ALanderGameMode* LanderGameMode = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
+				if (LanderGameMode)
+				{
+					LanderGameMode->StopTimer();
+				}
+			}
+		}
 
 		UE_LOG(LogTemp, Warning, TEXT("Goal!!"));
 
-		ALanderGameMode* LanderGameMode = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
-		if (LanderGameMode)
-		{
-			LanderGameMode->StopTimer();
-			LanderGameMode->LoadNextLevel();
-		}
 	}
 }
 
