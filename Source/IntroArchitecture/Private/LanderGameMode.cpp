@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Data/LevelTimerData.h"
 #include <LevelEditorActions.h>
+#include "Ship.h"
 
 ALanderGameMode::ALanderGameMode()
 {
@@ -23,6 +24,8 @@ ALanderGameMode::ALanderGameMode()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Did NOT find DT"));
 	}
+
+	DefaultPawnClass = AShip::StaticClass();
 }
 
 void ALanderGameMode::BeginPlay()
