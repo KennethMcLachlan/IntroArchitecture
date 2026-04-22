@@ -40,6 +40,8 @@ public:
 
 	bool IsLandedSafely();
 
+	void IsGoalReached();
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -76,6 +78,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* MainCamera;
+
+	UPROPERTY(VisibleAnywhere)
+	bool bIsInputEnabled = true;
 
 	float CurrentVelocity = 0.0f;
 };

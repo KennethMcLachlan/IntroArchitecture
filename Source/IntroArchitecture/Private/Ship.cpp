@@ -66,20 +66,26 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AShip::PropelUp(const FInputActionValue& Value)
 {
-	if (bool CurrentValue = Value.Get<bool>())
+	if (bIsInputEnabled)
 	{
-		const FVector WorldImpulseVector = FVector(0, 0, 1) * ImpulseStrength;
-		const FVector LocalImpulse = GetActorRotation().RotateVector(WorldImpulseVector);
-		ShipMesh->AddImpulse(LocalImpulse, NAME_None, true);
+		if (bool CurrentValue = Value.Get<bool>())
+		{
+			const FVector WorldImpulseVector = FVector(0, 0, 1) * ImpulseStrength;
+			const FVector LocalImpulse = GetActorRotation().RotateVector(WorldImpulseVector);
+			ShipMesh->AddImpulse(LocalImpulse, NAME_None, true);
+		}
 	}
 }
 
 void AShip::RotateShip(const FInputActionValue& Value)
 {
-	if (float CurrentValue = Value.Get<float>())
+	if (bIsInputEnabled)
 	{
-		const FVector Torque = FVector(1, 0, 0) * (TorqueStrength * CurrentValue);
-		ShipMesh->AddTorqueInRadians(Torque, NAME_None, true);
+		if (float CurrentValue = Value.Get<float>())
+		{
+			const FVector Torque = FVector(1, 0, 0) * (TorqueStrength * CurrentValue);
+			ShipMesh->AddTorqueInRadians(Torque, NAME_None, true);
+		}
 	}
 }
 
@@ -119,5 +125,10 @@ bool AShip::IsLandedSafely()
 	float AcceptableRollRange = 80.0f;
 
 	return FMath::Abs(CurrentRotation.Roll) <= AcceptableRollRange;
+}
+
+void AShip::IsGoalReached()
+{
+	bIsInputEnabled = false;
 }
 

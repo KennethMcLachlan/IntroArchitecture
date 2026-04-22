@@ -28,6 +28,8 @@ void AGoal::Tick(float DeltaTime)
 
 	if (bWaitingForParticleFX)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Waiting... IsActive: %d"), CelebrationEffectComponent ? CelebrationEffectComponent->IsActive() : -1);
+
 		if (CelebrationEffectComponent && !CelebrationEffectComponent->IsActive())
 		{
 			ALanderGameMode* LanderGameMode = Cast<ALanderGameMode>(UGameplayStatics::GetGameMode(this));
@@ -44,10 +46,14 @@ void AGoal::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComp
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 
-	//Functionality of the hit event
 	if (Other && Other != this && Other->IsA(AShip::StaticClass()))
 	{
 		HandleGoalReached();
+		AShip* ShipActor = Cast<AShip>(Other);
+		if (ShipActor)
+		{
+			ShipActor->IsGoalReached();
+		}
 	}
 }
 

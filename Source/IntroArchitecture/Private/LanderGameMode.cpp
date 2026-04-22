@@ -47,6 +47,22 @@ void ALanderGameMode::BeginPlay()
 	}
 
 	Timer = CountdownTimer;
+
+	APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (PlayerController)
+	{
+		FName CurrentLevelName = *UGameplayStatics::GetCurrentLevelName(GetWorld());
+		if (CurrentLevelName == "MainMenu")
+		{
+			PlayerController->bShowMouseCursor = true;
+			PlayerController->SetInputMode(FInputModeUIOnly());
+		}
+		else
+		{
+			PlayerController->bShowMouseCursor = false;
+			PlayerController->SetInputMode(FInputModeGameOnly());
+		}
+	}
 }
 
 void ALanderGameMode::Tick(float DeltaTime)
